@@ -6,7 +6,7 @@ import { UpdateTaskDto } from './dto/update-task.dto';
 import { GetTaskFilterDto } from './dto/get-tasks-filter.dto';
 import { TaskRepository } from './repository/task-repository';
 import { Task } from './model/task-entity';
-import { TaskStatus } from './task-status.enum';
+import { TaskStatus } from './enum/task-status.enum';
 
 export class TasksService {
   constructor(
