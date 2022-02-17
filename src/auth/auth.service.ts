@@ -28,16 +28,5 @@ export class AuthService {
         if(!isPasswordValid) return null;
         
         return user;
-
-        // const { username, password } = authCredentialsDto;
-        // const user = await this.userRepository.findOne({ username });
-        
-        // if(user && (await bcrypt.compare(password, user.password))) {
-        //     return 'success'
-        // } else {
-        //     throw new UnauthorizedException('Please check your login credentials');
-        // }
     }
-
-    
 }
