@@ -1,31 +1,44 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UsersRepository } from './repository/users.repository';
 import { AuthCredentialsDto } from './dto/auth-credentials.dto';
 import { compareSync } from 'bcrypt';
 import { User } from './model/user.entity';
+import { CreateUserDto } from './dto/create-user.dto';
+import { JwtService } from '@nestjs/jwt';
+
 @Injectable()
 export class AuthService {
     constructor(
         @InjectRepository(UsersRepository)
-        private readonly userRepository: UsersRepository
+        private readonly userRepository: UsersRepository,
+        private readonly jwtService: JwtService,
     ){}
 
-    async singUp(authCredentialsDto: AuthCredentialsDto): Promise<void> {
-        await this.userRepository.createUser(authCredentialsDto)
+    async signUp(createUserDto: CreateUserDto): Promise<void> {
+        await this.userRepository.createUser(createUserDto)
     }
 
-    async signIn(username: AuthCredentialsDto, password: AuthCredentialsDto): Promise<User> {
+    async login(user) {
+        const payload = { sub: user.id, email: user.email }  
+        
+        return {
+            token: this.jwtService.sign(payload)
+        } 
+    }
+
+    async signIn(authCredentialsDto: AuthCredentialsDto): Promise<User | string> {
+        const { email, password } = authCredentialsDto;
         let user: User
-
-        try {
-            user = await this.userRepository.findOne( { where:{ username } } )
-        } catch (err) {
-            return null;
+       
+        user = await this.userRepository.findOne( { email } )
+        if (!user) {
+            return "E-mail invalid"; 
         }
-
-        const isPasswordValid = compareSync(password, user.password)
-        if(!isPasswordValid) return null;
+    
+        const isPasswordValid = await compareSync(password, user.password)
+        console.log(password)
+        if(!isPasswordValid) return 'Password invalid';
         
         return user;
     }

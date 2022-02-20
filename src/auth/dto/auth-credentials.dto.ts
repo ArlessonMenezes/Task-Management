@@ -1,11 +1,9 @@
-import { IsNotEmpty, IsString, Matches, MaxLength, MinLength } from "class-validator";
+import { IsEmail, IsNotEmpty, IsString, Matches, MaxLength, MinLength } from "class-validator";
 
 export class AuthCredentialsDto {
-    @IsString()
-    @IsNotEmpty({ message:'Username cannot be empty' })
-    @MinLength(4)
-    @MaxLength(20)
-    username: string;
+    @IsEmail()
+    @IsNotEmpty({ message:'E-mail cannot be empty' })
+    email: string
 
     @IsString()
     @IsNotEmpty({ message:'Password cannot be empty' })
@@ -13,5 +11,5 @@ export class AuthCredentialsDto {
     @MaxLength(32)
     // @Matches(/((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/, 
     // { message: 'password is too weak' })
-    password: string;
+    password: string;   
 }
