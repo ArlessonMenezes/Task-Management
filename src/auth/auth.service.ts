@@ -40,6 +40,7 @@ export class AuthService {
         console.log(password)
         if(!isPasswordValid) return 'Password invalid';
         
+        delete user.password;
         return user;
     }
 }
